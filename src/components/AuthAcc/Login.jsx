@@ -17,7 +17,7 @@ const Login = () => {
       const response = await axios.get(`${apiUrl}/login`, {
         headers: {
           Authorization: basicAuth,
-        },
+        }
       });
 
       if (response.data && response.status === 200) {
