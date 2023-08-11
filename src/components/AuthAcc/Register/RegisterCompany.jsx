@@ -6,25 +6,25 @@ import axios from 'axios';
 
 const RegisterCompany = () => {
   const navigate = useNavigate();
-  const [imageFile, setImageFile] = useState(null);
 
   const onFinish = async (values) => {
+    console.log(values);
     const apiUrl = import.meta.env.VITE_BACKEND_ENDPOINT;
     try {
-      const formData = new FormData();
-      formData.append('name', values.name);
-      formData.append('email', values.email);
-      formData.append('password', values.password);
-      formData.append('confirmPassword', values.confirmPassword);
-      formData.append('city', values.city);
-      formData.append('phone', values.phone);
-      formData.append('photo', imageFile);
+      
+      const formData = {
+        name : values.name ,
+        cvEmail : values.cvEmail,
+        email : values.email,
+        password : values.password,
+        confirmPassword : values.confirmPassword,
+        information : values.information,
+        telephone : values.phone,
+        photo : null,
+      }
 
-      const response = await axios.post(`${apiUrl}/companies`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      console.log(formData);
+      const response = await axios.post(`${apiUrl}/companies`, formData);
       
       console.log('Registration successful:', response);
       navigate("/login");
@@ -33,10 +33,7 @@ const RegisterCompany = () => {
     }
   };
 
-  const handleImageUpload = (file) => {
-    setImageFile(file);
-    return false; // Prevent default antd behavior
-  };
+
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 py-8">
@@ -77,6 +74,21 @@ const RegisterCompany = () => {
           <Input
             prefix={<MailOutlined className="site-form-item-icon" />}
             placeholder="Email"
+          />
+        </Form.Item>
+        <Form.Item
+          name="cvEmail"
+          rules={[
+            {
+              required: true,
+              type: 'email',
+              message: 'Please input a valid cv email!',
+            },
+          ]}
+        >
+          <Input
+            prefix={<MailOutlined className="site-form-item-icon" />}
+            placeholder="Cv Email"
           />
         </Form.Item>
 
@@ -122,7 +134,7 @@ const RegisterCompany = () => {
         </Form.Item>
 
         <Form.Item
-          name="city"
+          name="information"
           rules={[
             {
               required: true,
@@ -130,7 +142,7 @@ const RegisterCompany = () => {
             },
           ]}
         >
-          <Input placeholder="City" />
+          <Input placeholder="Info" />
         </Form.Item>
 
         <Form.Item
@@ -156,7 +168,7 @@ const RegisterCompany = () => {
         >
           <Upload
             accept=".jpg,.jpeg,.png"
-            customRequest={handleImageUpload}
+            // customRequest={handleImageUpload}
             showUploadList={false}
           >
             <Button>Select Company Logo</Button>

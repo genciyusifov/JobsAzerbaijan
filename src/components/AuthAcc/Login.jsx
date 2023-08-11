@@ -4,9 +4,9 @@ import { Alert, Button, Form, Input, Space } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const Login = () => {
+const Login = ({ setSucces}) => {
   const navigate = useNavigate();
-  const [alert , setAlert] = useState(false)
+  const [alert,setAlert] = useState(false)
 
   const onFinish = async (values) => {
     const apiUrl = import.meta.env.VITE_BACKEND_ENDPOINT;
@@ -25,6 +25,7 @@ const Login = () => {
         const responseData = response.data;
         localStorage.setItem('user', JSON.stringify(responseData));
         navigate('/');
+        setSucces(true)
       }
     } catch (error) {
       setAlert(true)

@@ -3,7 +3,7 @@ import { AiOutlineUser } from 'react-icons/ai';
 
 function Account() {
     return (
-        <><AiOutlineUser /></>
+        <><AiOutlineUser/></>
     )
 }
 

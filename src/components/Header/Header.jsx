@@ -1,18 +1,25 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { AiOutlineHome, AiOutlineLogin } from 'react-icons/ai';
+import { FcBusiness } from 'react-icons/fc';
 import { BiSolidBusiness } from 'react-icons/bi';
 import Account from '../Header/Account'
 import "./Header.css"
 
-function Header() {
-  const user = JSON.parse(localStorage.getItem("user")) 
+function Header({succes, setSucces}) {
+  console.log(succes);
   const [state , setState] = useState(false)
-  const salamver = ()=> {
-    setState(!state)
+  const user = JSON.parse(localStorage.getItem("user")) 
+  const salamver = () => {
+    setSucces(false);
+    setState(!state);
   }
-  const deleteLocal = ()=> {
-    localStorage.removeItem("user")
+
+  const deleteLocal = () => {
+    console.log("logout");
+    localStorage.removeItem("user");
+    setSucces(false); 
+    console.log(succes);
   }
   return (
     <div className='bg-slate-100 flex items-center justify-between  p-2 border-b-2 md:px-44 '>
@@ -23,7 +30,7 @@ function Header() {
           alt='logo'
         />
       </div>
-      <ul className='flex gap-5'>
+      <div className='flex gap-5'>
         <NavLink className='p-2 border border-violet-800 rounded flex items-center duration-700 ' to={'/'}>
           <AiOutlineHome className='mr-1' />
           <div>
@@ -31,18 +38,24 @@ function Header() {
           </div>
         </NavLink>
         <NavLink className='p-2 border border-violet-800 rounded flex items-center duration-700' to={'/jobs'}>
-          <BiSolidBusiness className='mr-1' />
+          <FcBusiness className='mr-1' />
           <div >
             Jobs
+          </div>
+        </NavLink>
+        <NavLink className='p-2 border border-violet-800 rounded flex items-center duration-700' to={'/company'}>
+          <BiSolidBusiness className='mr-1' />
+          <div >
+            Companies
           </div>
         </NavLink>
         <li className='p-2 border border-violet-800 rounded text-gray-900 bg-sky-100 font-bold flex items-center'>
           <AiOutlineLogin className='mr-1' />
         {
-          user ?  <Link to={'/login'} onClick={deleteLocal} > Log Out </Link> : <Link to={'/login'}> Login </Link>
+          succes ?  <Link to={'/login'} onClick={deleteLocal} > Log Out </Link> : <Link to={'/login'}> Login </Link>
         }  
         </li>
-        <li className='w-[35px] h-[35px] rounded-full pt-2 pl-[9px] text-white  bg-slate-600 items-center justify-center relative ' onClick={salamver}  >
+        <li className='w-[35px] h-[35px] rounded-full pt-2 pl-[9px] text-white  bg-slate-600 items-center justify-center relative ' onClick={salamver}>
           <Account/>
           {state && user ? <div className='bg-black p-4 md:p-5 w-44 rounded  md:mt-0  top-[36px]   md:absolute md:z-40 '>
               <div className='text-white '>
@@ -51,7 +64,7 @@ function Header() {
               </div>
             </div> : null}
         </li>
-      </ul>
+      </div>
     </div>
   );
 }
