@@ -1,15 +1,13 @@
-import React from 'react'
-
-function Footer() {
+function Footeer() {
   return (
-    <Footer
+    <footer
     style={{
       textAlign: 'center',
     }}
   >
     ©2023 Created by Ganji Yusifov
-  </Footer>
+  </footer>
   )
 }
 
-export default Footer
+export default Footeer
