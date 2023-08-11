@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { AiOutlineHome, AiOutlineLogin } from 'react-icons/ai';
 import { BiSolidBusiness } from 'react-icons/bi';
 import Account from '../Header/Account'
+import "./Header.css"
 
 function Header() {
   const user = JSON.parse(localStorage.getItem("user")) 
@@ -14,28 +15,28 @@ function Header() {
     localStorage.removeItem("user")
   }
   return (
-    <div className='bg-slate-100 flex items-center justify-between  p-1 border-b-2 md:px-44 border-gray-900 shadow-2xl'>
+    <div className='bg-slate-100 flex items-center justify-between  p-2 border-b-2 md:px-44 '>
       <div>
         <img
-          className='w-[80px]'
+          className='w-[50px]'
           src='https://images.squarespace-cdn.com/content/v1/5941dba2b3db2bab435fa5a7/c47baec4-8fde-4e41-a2f8-7bb6fe0ac913/hiring+icon.png'
           alt='logo'
         />
       </div>
       <ul className='flex gap-5'>
-        <li className='p-2 border border-green-500 rounded flex items-center'>
+        <NavLink className='p-2 border border-violet-800 rounded flex items-center duration-700 ' to={'/'}>
           <AiOutlineHome className='mr-1' />
-          <Link to={'/'}>
+          <div>
             Home
-          </Link>
-        </li>
-        <li className='p-2 border border-green-500 rounded flex items-center'>
+          </div>
+        </NavLink>
+        <NavLink className='p-2 border border-violet-800 rounded flex items-center duration-700' to={'/jobs'}>
           <BiSolidBusiness className='mr-1' />
-          <Link to={'/jobs'}>
+          <div >
             Jobs
-          </Link>
-        </li>
-        <li className='p-2 border border-green-500 rounded text-gray-100 bg-emerald-600 flex items-center'>
+          </div>
+        </NavLink>
+        <li className='p-2 border border-violet-800 rounded text-gray-900 bg-sky-100 font-bold flex items-center'>
           <AiOutlineLogin className='mr-1' />
         {
           user ?  <Link to={'/login'} onClick={deleteLocal} > Log Out </Link> : <Link to={'/login'}> Login </Link>

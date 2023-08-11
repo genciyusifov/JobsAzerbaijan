@@ -35,7 +35,7 @@ const JobsPage = () => {
         <Sider
           style={{
             overflow: 'auto',
-            height: '100vh',
+            height: '80vh',
             left: 0,
           }}
           >
@@ -57,7 +57,7 @@ const JobsPage = () => {
                 
                 // height : "100vh",
                 overflow : "hidden",
-                overflowY : "scroll",
+                // overflowY : "scroll",
                 background: colorBgContainer,
               }}
             >
