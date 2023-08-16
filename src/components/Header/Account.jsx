@@ -1,9 +1,9 @@
 import React from 'react'
 import { AiOutlineUser } from 'react-icons/ai';
 
-function Account() {
+function Account(props) {
     return (
-        <><AiOutlineUser/></>
+        <><AiOutlineUser {...props} /></>
     )
 }
 

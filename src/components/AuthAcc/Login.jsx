@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Alert, Button, Form, Input, Space } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../../context/AuthContext';
 
-const Login = ({ setSucces}) => {
+const Login = ({ setSucces }) => {
+  const { setToken } = useContext(AuthContext)
   const navigate = useNavigate();
-  const [alert,setAlert] = useState(false)
+  const [alert, setAlert] = useState(false)
 
   const onFinish = async (values) => {
     const apiUrl = import.meta.env.VITE_BACKEND_ENDPOINT;
@@ -15,35 +17,38 @@ const Login = ({ setSucces}) => {
     const basicAuth = `Basic ${btoa(`${username}:${password}`)}`;
 
     try {
-      const response = await axios.get(`${apiUrl}/login`, {
-        headers: {
-          Authorization: basicAuth,
-        }
-      });
+        const response = await axios.get(`${apiUrl}/login`, {
+            headers: {
+                Authorization: basicAuth,
+            }
+        });
 
-      if (response.data && response.status === 200) {
-        const responseData = response.data;
-        localStorage.setItem('user', JSON.stringify(responseData));
-        navigate('/');
-        setSucces(true)
-      }
+        if (response.data && response.status === 200) {
+            setToken(basicAuth);
+            console.log(response);
+            const responseData = response.data;
+            localStorage.setItem('user', JSON.stringify(responseData));
+            localStorage.setItem('token', JSON.stringify(basicAuth));
+            navigate('/');
+            setSucces(true); // Fix typo, should be "setSuccess"
+        }
     } catch (error) {
-      setAlert(true)
-      console.error('Login failed:', error);
+        setAlert(true);
+        console.error('Login failed:', error);
     }
-  };
+};
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 py-8">
-        <Space
-          direction="vertical"
-          style={{
-            textAlign : "center",
-            width: '100%',
-          }}
-        >
-         {alert && <Alert message="Wrong email or password" type="error" />} 
-        </Space>
+      <Space
+        direction="vertical"
+        style={{
+          textAlign: "center",
+          width: '100%',
+        }}
+      >
+        {alert && <Alert message="Wrong email or password" type="error" />}
+      </Space>
       <Form
         name="login"
         className="w-full md:w-2/6 p-8 bg-white rounded shadow"

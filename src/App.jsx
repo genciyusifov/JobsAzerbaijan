@@ -7,10 +7,14 @@ import Footeer from './components/Footer';
 import Register from './components/AuthAcc/Register/Register';
 import { useEffect, useState } from 'react';
 import Company from './pages/Company';
-
+import UserProfile from './components/ProfileDetails/UserProfile';
+import "./index.css"
 function App() {
   const [succes , setSucces] = useState(false)
-  console.log(succes);
+  const user = localStorage.getItem("user")
+  useEffect(()=> {
+    user ? setSucces(true) : false
+  },[])
 
   return (
 
@@ -20,11 +24,11 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path='register' element={<Register  />} />
         <Route path='login' element={<Login  setSucces={setSucces} />  } />
+        <Route path='detail' element={<UserProfile succes={succes} />} />
         <Route path="jobs" element={<JobsPage />} />
         <Route path="company" element={<Company/>} />
       </Routes>
     <Footeer/>
-    
     </>
   )
 

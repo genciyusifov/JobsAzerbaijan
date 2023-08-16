@@ -1,70 +1,89 @@
 import React, { useContext, useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { AiOutlineHome, AiOutlineLogin } from 'react-icons/ai';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { AiOutlineHome, AiOutlineLogin, AiOutlineMenu } from 'react-icons/ai'; // Import the menu icon
 import { FcBusiness } from 'react-icons/fc';
 import { BiSolidBusiness } from 'react-icons/bi';
-import Account from '../Header/Account'
-import "./Header.css"
+import Account from '../Header/Account';
+import './Header.css';
 
-function Header({succes, setSucces}) {
-  console.log(succes);
-  const [state , setState] = useState(false)
-  const user = JSON.parse(localStorage.getItem("user")) 
-  const salamver = () => {
-    setSucces(false);
+function Header({ succes, setSucces }) {
+  const [state, setState] = useState(false);
+  const user = JSON.parse(localStorage.getItem('user'));
+  const navigate = useNavigate()
+
+  const toggleMenu = () => {
     setState(!state);
-  }
+  };
 
   const deleteLocal = () => {
-    console.log("logout");
-    localStorage.removeItem("user");
-    setSucces(false); 
-    console.log(succes);
+      localStorage.removeItem('user');
+      setSucces(false);
+  };
+  const goProfile = () => {
+    user ? navigate("/detail") : navigate("/login")
   }
+
   return (
-    <div className='bg-slate-100 flex items-center justify-between  p-2 border-b-2 md:px-44 '>
-      <div>
-        <img
-          className='w-[50px]'
-          src='https://images.squarespace-cdn.com/content/v1/5941dba2b3db2bab435fa5a7/c47baec4-8fde-4e41-a2f8-7bb6fe0ac913/hiring+icon.png'
-          alt='logo'
-        />
-      </div>
-      <div className='flex gap-5'>
-        <NavLink className='p-2 border border-violet-800 rounded flex items-center duration-700 ' to={'/'}>
-          <AiOutlineHome className='mr-1' />
-          <div>
+    <div className='bg-slate-100'>
+      <div className='flex items-center justify-between p-2 border-b-2 md:px-44'>
+        <div>
+          <img
+            className='w-8 md:w-12'
+            src='https://images.squarespace-cdn.com/content/v1/5941dba2b3db2bab435fa5a7/c47baec4-8fde-4e41-a2f8-7bb6fe0ac913/hiring+icon.png'
+            alt='logo'
+          />
+        </div>
+        <div className='md:hidden'>
+          <AiOutlineMenu className='text-3xl' onClick={toggleMenu} />
+        </div>
+        <div className='hidden md:flex gap-5'>
+          <NavLink className='nav-link flex items-center justify-center p-2 rounded' to={'/'}>
+            <AiOutlineHome className='mr-1' />
             Home
-          </div>
-        </NavLink>
-        <NavLink className='p-2 border border-violet-800 rounded flex items-center duration-700' to={'/jobs'}>
-          <FcBusiness className='mr-1' />
-          <div >
+          </NavLink>
+          <NavLink className='nav-link flex items-center justify-center p-2 rounded' to={'/jobs'}>
+            <FcBusiness className='mr-1' />
             Jobs
-          </div>
-        </NavLink>
-        <NavLink className='p-2 border border-violet-800 rounded flex items-center duration-700' to={'/company'}>
-          <BiSolidBusiness className='mr-1' />
-          <div >
+          </NavLink>
+          <NavLink className='nav-link flex items-center justify-center p-2 rounded' to={'/company'}>
+            <BiSolidBusiness className='mr-1' />
             Companies
+          </NavLink>
+          <div className='nav-link flex items-center justify-center p-2'>
+            <AiOutlineLogin className='mr-1' />
+            {succes ? (
+              <Link to={'/login'} onClick={deleteLocal}>
+                Log Out
+              </Link>
+            ) : (
+              <Link to={'/login'}>Login</Link>
+            )}
           </div>
-        </NavLink>
-        <li className='p-2 border border-violet-800 rounded text-gray-900 bg-sky-100 font-bold flex items-center'>
-          <AiOutlineLogin className='mr-1' />
-        {
-          succes ?  <Link to={'/login'} onClick={deleteLocal} > Log Out </Link> : <Link to={'/login'}> Login </Link>
-        }  
-        </li>
-        <li className='w-[35px] h-[35px] rounded-full pt-2 pl-[9px] text-white  bg-slate-600 items-center justify-center relative ' onClick={salamver}>
-          <Account/>
-          {state && user ? <div className='bg-black p-4 md:p-5 w-44 rounded  md:mt-0  top-[36px]   md:absolute md:z-40 '>
-              <div className='text-white '>
-                Name: {user.name} <br />
-                Surname: {user.surname}
-              </div>
-            </div> : null}
-        </li>
+          <div className='nav-link relative items-center justify-center pl-2 pt-1 bg-slate-300 w-8 h-8 rounded-full' onClick={goProfile} >
+            <Account className='inline m-0' />
+          </div>
+        </div>
       </div>
+      {/* Mobile Menu */}
+      {state && (
+        <div className='md:hidden duration-700 bg-slate-100'>
+          <NavLink className='nav-link-mobile' to={'/'}>
+            Home
+          </NavLink>
+          <NavLink className='nav-link-mobile' to={'/jobs'}>
+            Jobs
+          </NavLink>
+          <NavLink className='nav-link-mobile' to={'/company'}>
+            Companies
+          </NavLink>
+          <div className='nav-link-mobile' onClick={deleteLocal}>
+            Log Out
+          </div>
+          <div className='nav-link relative' >
+            <Account className='inline m-0' />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
