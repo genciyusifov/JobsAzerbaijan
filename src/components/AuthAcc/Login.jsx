@@ -8,7 +8,7 @@ import { AuthContext } from '../../context/AuthContext';
 const Login = ({ setSucces }) => {
   const { setToken } = useContext(AuthContext)
   const navigate = useNavigate();
-  const [alert, setAlert] = useState(false)
+  const [alert, setAlert] = useState(3)
 
   const onFinish = async (values) => {
     const apiUrl = import.meta.env.VITE_BACKEND_ENDPOINT;
@@ -24,16 +24,21 @@ const Login = ({ setSucces }) => {
         });
 
         if (response.data && response.status === 200) {
+          setAlert(1)
             setToken(basicAuth);
             console.log(response);
             const responseData = response.data;
-            localStorage.setItem('user', JSON.stringify(responseData));
+            if (response.data.cvEmail) {
+              localStorage.setItem('company', JSON.stringify(responseData));
+            }else {
+              localStorage.setItem('user', JSON.stringify(responseData));       
+            }
             localStorage.setItem('token', JSON.stringify(basicAuth));
             navigate('/');
-            setSucces(true); // Fix typo, should be "setSuccess"
+            setSucces(true); 
         }
     } catch (error) {
-        setAlert(true);
+        setAlert(0);
         console.error('Login failed:', error);
     }
 };
@@ -47,7 +52,7 @@ const Login = ({ setSucces }) => {
           width: '100%',
         }}
       >
-        {alert && <Alert message="Wrong email or password" type="error" />}
+        {alert == 0 ? <Alert message="Wrong email or password" type="error" /> : alert==1 ? <Alert message="Wrong email or password" type="success" />  : null  }
       </Space>
       <Form
         name="login"

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { AiOutlineHome, AiOutlineLogin, AiOutlineMenu } from 'react-icons/ai'; // Import the menu icon
-import { FcBusiness } from 'react-icons/fc';
+import { AiOutlineHome, AiOutlineLogin, AiOutlineMenu } from 'react-icons/ai';
+import { FaBusinessTime } from 'react-icons/fa';
 import { BiSolidBusiness } from 'react-icons/bi';
 import Account from '../Header/Account';
 import './Header.css';
@@ -9,6 +9,7 @@ import './Header.css';
 function Header({ succes, setSucces }) {
   const [state, setState] = useState(false);
   const user = JSON.parse(localStorage.getItem('user'));
+  const company = JSON.parse(localStorage.getItem('company'));
   const navigate = useNavigate()
 
   const toggleMenu = () => {
@@ -16,15 +17,21 @@ function Header({ succes, setSucces }) {
   };
 
   const deleteLocal = () => {
+    if (user) {
       localStorage.removeItem('user');
-      setSucces(false);
+      localStorage.removeItem('token');
+    } else if (company) {
+      localStorage.removeItem('company');
+      localStorage.removeItem('token');
+    }
+    setSucces(false);
   };
   const goProfile = () => {
-    user ? navigate("/detail") : navigate("/login")
+    user || company ? navigate("/detail") : navigate("/login")
   }
 
   return (
-    <div className='bg-slate-100'>
+    <div className='bg-slate-100 '>
       <div className='flex items-center justify-between p-2 border-b-2 md:px-44'>
         <div>
           <img
@@ -37,21 +44,21 @@ function Header({ succes, setSucces }) {
           <AiOutlineMenu className='text-3xl' onClick={toggleMenu} />
         </div>
         <div className='hidden md:flex gap-5'>
-          <NavLink className='nav-link flex items-center justify-center p-2 rounded' to={'/'}>
+          <NavLink className='nav-link flex items-center justify-center p-1 rounded' to={'/'}>
             <AiOutlineHome className='mr-1' />
             Home
           </NavLink>
-          <NavLink className='nav-link flex items-center justify-center p-2 rounded' to={'/jobs'}>
-            <FcBusiness className='mr-1' />
+          <NavLink className='nav-link flex items-center justify-center p-1 rounded' to={'/jobs'}>
+            <FaBusinessTime className='mr-1' />
             Jobs
           </NavLink>
-          <NavLink className='nav-link flex items-center justify-center p-2 rounded' to={'/company'}>
+          <NavLink className='nav-link flex items-center justify-center p-1 rounded' to={'/company'}>
             <BiSolidBusiness className='mr-1' />
             Companies
           </NavLink>
-          <div className='nav-link flex items-center justify-center p-2'>
+          <div className='nav-link flex items-center justify-center p-1 bg-red-800  rounded text-white'>
             <AiOutlineLogin className='mr-1' />
-            {succes ? (
+            {succes || user || company ? (
               <Link to={'/login'} onClick={deleteLocal}>
                 Log Out
               </Link>
@@ -59,31 +66,30 @@ function Header({ succes, setSucces }) {
               <Link to={'/login'}>Login</Link>
             )}
           </div>
-          <div className='nav-link relative items-center justify-center pl-2 pt-1 bg-slate-300 w-8 h-8 rounded-full' onClick={goProfile} >
+          <div className='nav-link relative flex items-center p-2 bg-green-600 text-white cursor-pointer  gap-3 h-8 rounded' onClick={goProfile} >
             <Account className='inline m-0' />
+            <h1>{user ? user.name : company.name}</h1>
           </div>
         </div>
       </div>
-      {/* Mobile Menu */}
-      {state && (
-        <div className='md:hidden duration-700 bg-slate-100'>
-          <NavLink className='nav-link-mobile' to={'/'}>
-            Home
-          </NavLink>
-          <NavLink className='nav-link-mobile' to={'/jobs'}>
-            Jobs
-          </NavLink>
-          <NavLink className='nav-link-mobile' to={'/company'}>
-            Companies
-          </NavLink>
-          <div className='nav-link-mobile' onClick={deleteLocal}>
-            Log Out
-          </div>
-          <div className='nav-link relative' >
-            <Account className='inline m-0' />
-          </div>
+      <div className={` duration-700 bg-slate-100 flex md:hidden flex-col h-full  items-center w-56 gap-5 p-4 absolute z-40 ${state ? "right-0" : "right-[-400px]"} `}>
+        <NavLink className='nav-link-mobile px-10 rounded' to={'/'}>
+          Home
+        </NavLink>
+        <NavLink className='nav-link-mobile px-10 rounded' to={'/jobs'}>
+          Jobs
+        </NavLink>
+        <NavLink className='nav-link-mobile px-10 rounded' to={'/company'}>
+          Companies
+        </NavLink>
+        <div className='nav-link-mobile px-10 rounded' onClick={deleteLocal}>
+          Log Out
         </div>
-      )}
+        <div className='nav-link relative flex items-center p-2 bg-green-600 text-white cursor-pointer  gap-3 h-8 rounded' onClick={goProfile} >
+          <Account className='inline m-0' />
+          <h1 className='text-xs'>{user ? user.name : company.name}</h1>
+        </div>
+      </div>
     </div>
   );
 }

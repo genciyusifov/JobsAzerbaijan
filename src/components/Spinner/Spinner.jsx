@@ -1,14 +1,12 @@
 import React from 'react'
-import { BounceLoader } from 'react-spinners'
+import { PacmanLoader } from 'react-spinners'
 
 function Spinner() {
     return (
-        <div className='m-auto'>
-            <BounceLoader
-                color="violet"
-                loading
-                size={300}
-                speedMultiplier={1}
+        <div className='m-auto overflow-hidden py-32'>
+            <PacmanLoader
+                color="#36d7b7"
+                size={100}
             />
         </div>
     )

@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import Company from './pages/Company';
 import UserProfile from './components/ProfileDetails/UserProfile';
 import "./index.css"
+import CompanyInfo from './pages/CompanyInfo';
 function App() {
   const [succes , setSucces] = useState(false)
   const user = localStorage.getItem("user")
@@ -26,7 +27,8 @@ function App() {
         <Route path='login' element={<Login  setSucces={setSucces} />  } />
         <Route path='detail' element={<UserProfile succes={succes} />} />
         <Route path="jobs" element={<JobsPage />} />
-        <Route path="company" element={<Company/>} />
+        <Route path="company" element={<Company />} /> 
+        <Route path="company/:id" element={<CompanyInfo/>}  />
       </Routes>
     <Footeer/>
     </>
