@@ -1,20 +1,29 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { AiOutlineHome, AiOutlineLogin, AiOutlineMenu } from 'react-icons/ai';
 import { FaBusinessTime } from 'react-icons/fa';
 import { BiSolidBusiness } from 'react-icons/bi';
 import Account from '../Header/Account';
 import './Header.css';
-
+import { AuthContext } from '../../context/AuthContext';
 function Header({ succes, setSucces }) {
+  const { stat } = useContext(AuthContext);
   const [state, setState] = useState(false);
-  const user = JSON.parse(localStorage.getItem('user'));
-  const company = JSON.parse(localStorage.getItem('company'));
-  const navigate = useNavigate()
-
+  const [user, setUser] = useState(null); 
+  const [company, setCompany] = useState(null); 
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    const storedCompany = JSON.parse(localStorage.getItem('company'));
+    setUser(storedUser);
+    setCompany(storedCompany);
+  });
+  
   const toggleMenu = () => {
     setState(!state);
   };
+  
 
   const deleteLocal = () => {
     if (user) {
@@ -68,7 +77,7 @@ function Header({ succes, setSucces }) {
           </div>
           <div className='nav-link relative flex items-center p-2 bg-green-600 text-white cursor-pointer  gap-3 h-8 rounded' onClick={goProfile} >
             <Account className='inline m-0' />
-            <h1>{user ? user.name : company.name}</h1>
+            <h1>{user ? user.name : company?  company.name : null}</h1>
           </div>
         </div>
       </div>
@@ -85,9 +94,9 @@ function Header({ succes, setSucces }) {
         <div className='nav-link-mobile px-10 rounded' onClick={deleteLocal}>
           Log Out
         </div>
-        <div className='nav-link relative flex items-center p-2 bg-green-600 text-white cursor-pointer  gap-3 h-8 rounded' onClick={goProfile} >
+        <div className='nav-link relative flex ite  ms-center p-2 bg-green-600 text-white cursor-pointer  gap-3 h-8 rounded' onClick={goProfile} >
           <Account className='inline m-0' />
-          <h1 className='text-xs'>{user ? user.name : company.name}</h1>
+          <h1 className='text-xs'>{user ? user.name : company?  company.name : null }</h1>
         </div>
       </div>
     </div>

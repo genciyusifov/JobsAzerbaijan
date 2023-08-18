@@ -1,13 +1,19 @@
 import { Alert } from 'antd';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 
 function UserProfile({ success }) {
     const navigate = useNavigate();
-    const user = JSON.parse(localStorage.getItem("user"));
+
+    let user ; 
+    useEffect(()=>{
+        user = JSON.parse(localStorage.getItem("user"));
+    },[])
     const company = JSON.parse(localStorage.getItem("company"));
     const token = JSON.parse(localStorage.getItem("token"));
+    const {stat,setStat} = useContext(AuthContext) 
     const [alert, setAlert] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
 
@@ -36,9 +42,8 @@ function UserProfile({ success }) {
     };
 
     const handleUpdateClick = async () => {
-        console.log("update");
         const apiUrl = import.meta.env.VITE_BACKEND_ENDPOINT;
-        let param = user ? "user" : company ? "companies" : null
+        let param = user ? "users" : company ? "companies" : null
 
         try {
             console.log(updatedUser);
@@ -48,13 +53,17 @@ function UserProfile({ success }) {
                 {
                     headers: {
                         Authorization: token,
-                        "Content-type": "application/json; charset=UTF-8"
                     }
                 }
             );
+            setStat(!stat)
             console.log("User updated", response);
             setAlert(true);
-            user ? localStorage.setItem("user", JSON.stringify(updatedUser)) : localStorage.setItem("company", JSON.stringify(updatedUser))
+            if(user) {
+             localStorage.setItem("user", JSON.stringify(updatedUser))  
+            }else {
+                localStorage.setItem("company", JSON.stringify(updatedUser))
+            }
    
             setIsEditMode(false);
         } catch (error) {

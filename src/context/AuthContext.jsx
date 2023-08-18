@@ -5,12 +5,15 @@ export const AuthContext = createContext()
 
  function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
+  const [stat, setStat] = useState(false)
     const [token, setToken] = useState(null)
     const  obj = {
          token, 
          setToken,
          loading,
-         setLoading
+         setLoading,
+         stat,
+         setStat
          }
 
 
