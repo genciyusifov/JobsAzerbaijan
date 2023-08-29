@@ -3,19 +3,20 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { MyModalContext } from '../../context/myModal';
 
 function UserProfile({ success }) {
     const navigate = useNavigate();
 
-    let user ; 
-    useEffect(()=>{
-        user = JSON.parse(localStorage.getItem("user"));
-    },[])
+    const user = JSON.parse(localStorage.getItem("user"));
     const company = JSON.parse(localStorage.getItem("company"));
     const token = JSON.parse(localStorage.getItem("token"));
-    const {stat,setStat} = useContext(AuthContext) 
+    const { stat, setStat } = useContext(AuthContext)
     const [alert, setAlert] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const { setMyModal} = React.useContext(MyModalContext);
+    
 
     let initialUser = {};
 
@@ -56,15 +57,17 @@ function UserProfile({ success }) {
                     }
                 }
             );
-            setStat(!stat)
+            if (response.status == 200) {
+                setStat(!stat)
+            }
             console.log("User updated", response);
             setAlert(true);
-            if(user) {
-             localStorage.setItem("user", JSON.stringify(updatedUser))  
-            }else {
+            if (user) {
+                localStorage.setItem("user", JSON.stringify(updatedUser))
+            } else {
                 localStorage.setItem("company", JSON.stringify(updatedUser))
             }
-   
+
             setIsEditMode(false);
         } catch (error) {
             console.error("Error updating user:", error);
@@ -78,6 +81,40 @@ function UserProfile({ success }) {
             [name]: value,
         }));
     };
+    const handleImageClick = () => {
+        setMyModal({
+            open: true,
+            component: (
+                <div className='p-10'>
+                    <button onClick={handleImageUpdate}>Update</button>
+                    <button onClick={handleImageDelete}>Delete</button>
+                </div>
+            ),
+            onOk: () => {
+                setMyModal({
+                    open: false,
+                });
+            },
+        });
+    };
+    
+    const handleImageUpdate = () => {
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+        fileInput.addEventListener("change", (e) => {
+            setSelectedImage(e.target.files[0]);
+        });
+        fileInput.click();
+    };
+
+    const handleImageDelete = () => {
+        setSelectedImage(null); 
+        setMyModal({
+            open: false,
+        });
+    };
+    
     return (
         <section className="bg-gray-200 flex flex-wrap items-center justify-center">
             <div className="container py-5">
@@ -86,11 +123,10 @@ function UserProfile({ success }) {
                         <div className="mb-4">
                             <div className="text-center">
                                 <img
-                                    src={updatedUser.photoUrl ? user ? updatedUser.photoUrl : "https://www.pngmart.com/files/22/User-Avatar-Profile-PNG-Isolated-Transparent-Picture.png" :
-                                "https://www.yesenergy.com/hs-fs/hubfs/Yes-Energy-Logo-S(Dark).png?width=3000&name=Yes-Energy-Logo-S(Dark).png"
-                                }
+                                    src={selectedImage ? URL.createObjectURL(selectedImage) : updatedUser.photoUrl}
                                     alt="avatar"
-                                    className="rounded-full w-36 mx-auto p-2"
+                                    className="rounded-full w-36 h-36 mx-auto p-2 cursor-pointer object-center"
+                                    onClick={handleImageClick}
                                 />
                                 <div className="flex justify-center space-x-1 mb-2">
                                     <button className="bg-slate-500  text-white py-2 px-4 rounded">
@@ -356,8 +392,8 @@ function UserProfile({ success }) {
                                     <button
                                         type="button"
                                         className="bg-blue-500 text-white py-2 px-4 rounded"
-                                        onClick={isEditMode ?  handleUpdateClick : handleEditClick}
-                                        // disabled={isEditMode && !user || !company}
+                                        onClick={isEditMode ? handleUpdateClick : handleEditClick}
+                                    // disabled={isEditMode && !user || !company}
                                     >
                                         {isEditMode ? 'Update' : 'Edit'}
                                     </button>

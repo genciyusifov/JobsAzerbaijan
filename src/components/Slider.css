@@ -1,14 +1,16 @@
 .herosection {
 	margin-top: var(--headerheight);
-	height: calc(100vh - var(--headerheight));
+	/* height: calc(100vh - var(--headerheight)); */
+	height: 80vh;
 	display: flex;
 	font-family: Poppins, sans-serif;
 }
 .left {
 	position: relative;
-	background: linear-gradient(#ebe4f7, #fbf4ff);
+	/* background: linear-gradient(#ebe4f7, #fbf4ff); */
+	background: white;
 	flex: 1.3;
-	border: 8px solid #fff;
+	/* border: 8px solid #fff; */
 	border-radius: 1em;
 	padding: 10em 2em;
 	display: flex;
@@ -17,7 +19,7 @@
 }
 .left .appname {
 	font-family: "Josefin Sans", sans-serif;
-	color: rgb(237, 143, 50);
+	/* color: rgb(237, 143, 50); */
 	font-weight: 600;
 }
 
@@ -36,7 +38,7 @@
 	align-self: center;
 }
 .left .getStarted button {
-	padding: 1em 2em;
+	padding: .7em 1em;
 	outline: none;
 	border: none;
 	border-radius: 1.5em;
@@ -125,8 +127,9 @@
 
 @media (max-width: 850px) {
 	.herosection {
-		height: auto;
+		/* height: auto; */
 		flex-direction: column;
+		height: 150vh;
 	}
 	.left {
 		padding: 5em 2em;
@@ -149,7 +152,7 @@
 
 .right {
 	flex: 1;
-	background: #19134c;
+	/* background: #19134c; */
 	border: 8px solid #fff;
 	border-radius: 1em;
 	padding: 2em;
@@ -173,9 +176,23 @@
 	animation: beAnimation 10s ease-in-out infinite alternate;
 }
 @keyframes beAnimation {
-	to {
-		transform: translateX(-72.5%);
+	0% {
+		transform: translateX(0%);
 	}
+	20% {
+		transform: skewX(10deg);
+	}
+	40% {
+		transform: skewX(-10deg);
+	}
+	50% {
+		transform: translateX(-20.5%);
+	}
+	100%{
+		transform: translateX(20.5%);
+
+	}
+	
 }
 /* Hero Section end */
 
@@ -263,7 +280,7 @@
 	align-items: center;
 	font-family: "Roboto", sans-serif;
 	position: relative;
-	overflow-x: hidden;
+	/* overflow-x: hidden; */
 }
 .features h1 {
 	font-size: 2.5em;

@@ -6,31 +6,52 @@ import axios from 'axios';
 
 const RegisterCompany = () => {
   const navigate = useNavigate();
+  const [photoBlob, setPhotoBlob] = useState(null);
+
 
   const onFinish = async (values) => {
-    console.log(values);
     const apiUrl = import.meta.env.VITE_BACKEND_ENDPOINT;
     try {
-      
-      const formData = {
-        name : values.name ,
-        cvEmail : values.cvEmail,
-        email : values.email,
-        password : values.password,
-        confirmPassword : values.confirmPassword,
-        information : values.information,
-        telephone : values.phone,
-        photo : null,
+      const formData = new FormData();
+
+      const formCompany = {
+        name: values.name,
+        cvEmail: values.cvEmail,
+        email: values.email,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+        information: values.information,
+        telephone: values.phone,
+        
+      };
+      const userBlob = new Blob([JSON.stringify(formCompany)], { type: 'application/json' });
+      formData.append('companyRequestDto', userBlob);
+
+      if (photoBlob) {
+        formData.append('file', photoBlob, 'logo.jpg');
       }
 
-      console.log(formData);
-      const response = await axios.post(`${apiUrl}/companies`, formData);
-      
-      console.log('Registration successful:', response);
-      navigate("/login");
+      const response = await axios.post(`${apiUrl}/companies`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response) {
+        navigate('/login');
+      }
     } catch (error) {
       console.error('Registration failed:', error);
     }
+  };
+
+  const handlePhotoUpload = (file) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setPhotoBlob(new Blob([event.target.result], { type: file.type }));
+    };
+    reader.readAsArrayBuffer(file);
   };
 
 
@@ -156,24 +177,13 @@ const RegisterCompany = () => {
         >
           <Input placeholder="Phone" />
         </Form.Item>
+        <input
+          type="file"
+          accept=".jpg,.jpeg,.png"
+          onChange={(e) => handlePhotoUpload(e.target.files[0])}
+        />
 
-        <Form.Item
-          name="photo"
-          rules={[
-            {
-              required: true,
-              message: 'Please upload a company logo!',
-            },
-          ]}
-        >
-          <Upload
-            accept=".jpg,.jpeg,.png"
-            // customRequest={handleImageUpload}
-            showUploadList={false}
-          >
-            <Button>Select Company Logo</Button>
-          </Upload>
-        </Form.Item>
+
 
         <Form.Item className="text-center">
           <Button

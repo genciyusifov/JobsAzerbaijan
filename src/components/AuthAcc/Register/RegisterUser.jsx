@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { LockOutlined, UserOutlined, MailOutlined } from '@ant-design/icons';
-import { Button, Form, Input, DatePicker, Select } from 'antd';
+import { Button, Form, Input, DatePicker, Select, Upload } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -8,11 +8,13 @@ const { Option } = Select;
 
 const RegisterUser = () => {
   const navigate = useNavigate();
-
+  const [photoBlob, setPhotoBlob] = useState(null);
   const onFinish = async (values) => {
     const apiUrl = import.meta.env.VITE_BACKEND_ENDPOINT;
     try {
-      const response = await axios.post(`${apiUrl}/users`, {
+      const formData = new FormData();
+
+      const userObj = {
         city: values.city,
         confirmPassword: values.confirmPassword,
         dateOfBirth: values.dateOfBirth.toISOString(),
@@ -21,16 +23,40 @@ const RegisterUser = () => {
         name: values.name,
         password: values.password,
         phone: values.phone,
-        photoUrl: null,
         surname: values.surname,
+      };
+
+      const userBlob = new Blob([JSON.stringify(userObj)], { type: 'application/json' });
+      formData.append('userDto', userBlob);
+
+      if (photoBlob) {
+        formData.append('file', photoBlob, 'profile.jpg');
+      }
+
+      const response = await axios.post(`${apiUrl}/users`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
       });
-      console.log('Registration successful:', response);
-      {response && navigate("/login")}
+
+      if (response) {
+        navigate('/login');
+      }
     } catch (error) {
       console.error('Registration failed:', error);
     }
   };
 
+
+
+  const handlePhotoUpload = (file) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setPhotoBlob(new Blob([event.target.result], { type: file.type }));
+    };
+    reader.readAsArrayBuffer(file);
+  };
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 py-8">
       <Form
@@ -177,18 +203,13 @@ const RegisterUser = () => {
         >
           <Input placeholder="Phone" />
         </Form.Item>
+        <input
+          type="file"
+          accept=".jpg,.jpeg,.png"
+          onChange={(e) => handlePhotoUpload(e.target.files[0])}
+        />
 
-        <Form.Item
-          name="photoUrl"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your Photo URL!',
-            },
-          ]}
-        >
-          <Input placeholder="Photo URL" />
-        </Form.Item>
+
 
         <Form.Item className="text-center">
           <Button

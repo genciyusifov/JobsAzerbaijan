@@ -1,9 +1,11 @@
 import React from 'react';
 import "react-responsive-carousel/lib/styles/carousel.min.css"
 import  './Slider.css'
+import { useNavigate } from 'react-router-dom';
 
 
 function LandingPage() {
+  const navigate = useNavigate()
   return (
     <>
       <div className="herosection">
@@ -11,7 +13,9 @@ function LandingPage() {
           <p className="appname">Smart Job Search App</p>
           <h1 className="heading">Created Vacancy and CV</h1>
           <div className="getStarted">
-            <button>Find a Job</button>
+            <button onClick={()=>{
+              navigate("/jobs")
+            }} >Find a Job</button>
           </div>
           <div className="element1">
             <div className="element1-wrapper">

@@ -10,7 +10,6 @@ const Company = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const { loading, setLoading } = useContext(AuthContext)
-  // setLoading(true)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -47,7 +46,7 @@ const Company = () => {
           onChange={(e) => filterData(e.target.value)}
           className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
           type="text"
-          placeholder="Şirket ara..."
+          placeholder="Find Company..."
         />
       </div>
 
@@ -68,7 +67,7 @@ const Company = () => {
                   {company.information || "Şirket bilgisi bulunamadı."}
                 </p>
                 <img
-                  src={company.logo || getRandomUnsplashImage()}
+                  src={company.photoUrl}
                   alt={company.name}
                   className="w-full h-40 object-cover rounded-md"
                 />

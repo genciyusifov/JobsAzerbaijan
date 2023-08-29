@@ -6,7 +6,8 @@ import axios from 'axios';
 import { AuthContext } from '../../context/AuthContext';
 
 const Login = ({ setSucces }) => {
-  const { setToken } = useContext(AuthContext)
+
+  const { setToken , stat, setStat } = useContext(AuthContext)
   const navigate = useNavigate();
   const [alert, setAlert] = useState(3)
 
@@ -24,6 +25,7 @@ const Login = ({ setSucces }) => {
         });
 
         if (response.data && response.status === 200) {
+        
           setAlert(1)
             setToken(basicAuth);
             console.log(response);
@@ -34,6 +36,7 @@ const Login = ({ setSucces }) => {
               localStorage.setItem('user', JSON.stringify(responseData));       
             }
             localStorage.setItem('token', JSON.stringify(basicAuth));
+            setStat(!stat)
             navigate('/');
             setSucces(true); 
         }

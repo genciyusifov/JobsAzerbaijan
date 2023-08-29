@@ -7,7 +7,7 @@ import Account from '../Header/Account';
 import './Header.css';
 import { AuthContext } from '../../context/AuthContext';
 function Header({ succes, setSucces }) {
-  const { stat } = useContext(AuthContext);
+  const { stat , setStat } = useContext(AuthContext);
   const [state, setState] = useState(false);
   const [user, setUser] = useState(null); 
   const [company, setCompany] = useState(null); 
@@ -18,7 +18,7 @@ function Header({ succes, setSucces }) {
     const storedCompany = JSON.parse(localStorage.getItem('company'));
     setUser(storedUser);
     setCompany(storedCompany);
-  });
+  },[stat]);
   
   const toggleMenu = () => {
     setState(!state);
@@ -26,6 +26,7 @@ function Header({ succes, setSucces }) {
   
 
   const deleteLocal = () => {
+    setStat(!stat)
     if (user) {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
@@ -40,32 +41,32 @@ function Header({ succes, setSucces }) {
   }
 
   return (
-    <div className='bg-slate-100 '>
-      <div className='flex items-center justify-between p-2 border-b-2 md:px-44'>
+    <>
+      <div className='flex items-center justify-between p-2  md:px-44'>
         <div>
           <img
-            className='w-8 md:w-12'
-            src='https://images.squarespace-cdn.com/content/v1/5941dba2b3db2bab435fa5a7/c47baec4-8fde-4e41-a2f8-7bb6fe0ac913/hiring+icon.png'
+            className='w-24 md:w-28'
+            src='https://www.eaton.com/content/dam/eaton/global/logos/eaton-logo-mobile.png'
             alt='logo'
           />
         </div>
         <div className='md:hidden'>
           <AiOutlineMenu className='text-3xl' onClick={toggleMenu} />
         </div>
-        <div className='hidden md:flex gap-5'>
-          <NavLink className='nav-link flex items-center justify-center p-1 rounded' to={'/'}>
+        <div className='hidden md:flex gap-4'>
+          <NavLink className='nav-link flex items-center justify-center p-2 ' to={'/'}>
             <AiOutlineHome className='mr-1' />
             Home
           </NavLink>
-          <NavLink className='nav-link flex items-center justify-center p-1 rounded' to={'/jobs'}>
+          <NavLink className='nav-link flex items-center justify-center p-2   ' to={'/jobs'}>
             <FaBusinessTime className='mr-1' />
             Jobs
           </NavLink>
-          <NavLink className='nav-link flex items-center justify-center p-1 rounded' to={'/company'}>
+          <NavLink className='nav-link flex items-center justify-center  ' to={'/company'}>
             <BiSolidBusiness className='mr-1' />
             Companies
           </NavLink>
-          <div className='nav-link flex items-center justify-center p-1 bg-red-800  rounded text-white'>
+          <div className='nav-link flex items-center justify-center p-2  rounded bg-slate-50 text-sm'>
             <AiOutlineLogin className='mr-1' />
             {succes || user || company ? (
               <Link to={'/login'} onClick={deleteLocal}>
@@ -75,7 +76,7 @@ function Header({ succes, setSucces }) {
               <Link to={'/login'}>Login</Link>
             )}
           </div>
-          <div className='nav-link relative flex items-center p-2 bg-green-600 text-white cursor-pointer  gap-3 h-8 rounded' onClick={goProfile} >
+          <div className='nav-link relative flex items-center px-1 bg-green-600 text-white cursor-pointer   rounded  ' onClick={goProfile} >
             <Account className='inline m-0' />
             <h1>{user ? user.name : company?  company.name : null}</h1>
           </div>
@@ -94,12 +95,15 @@ function Header({ succes, setSucces }) {
         <div className='nav-link-mobile px-10 rounded' onClick={deleteLocal}>
           Log Out
         </div>
-        <div className='nav-link relative flex ite  ms-center p-2 bg-green-600 text-white cursor-pointer  gap-3 h-8 rounded' onClick={goProfile} >
-          <Account className='inline m-0' />
-          <h1 className='text-xs'>{user ? user.name : company?  company.name : null }</h1>
+        <div className='nav-link relative flex items-center p-1  text-white bg-slate-300 cursor-pointer  gap-2  rounded' onClick={goProfile} >
+          <Account className='inline' />
+          {
+            user || company ? <h1 className='text-xs'>{user ? user.name : company?  company.name : "No Name" }</h1> : null
+          }
+          
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -60,7 +60,7 @@ const JobsPage = () => {
                 background: colorBgContainer,
               }}
             >
-              <h1 className='text-3xl  pb-2 border border-b-violet-950'>Jobs</h1>
+              <h1 className='text-3xl  pb-2 border border-t-0 border-b-violet-750'>Jobs</h1>
               
             </div>
           </Content>

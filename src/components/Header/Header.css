@@ -1,5 +1,6 @@
+
 .active{
-    background: rgb(0, 0, 216);
-    color: white;
-    transition: 1s;
-}   
+    border-bottom: 1px solid blue;
+    transition: 1s ease-in-out;
+} 
+
